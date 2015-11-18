@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+ 
+	<record model="ir.ui.view" id="music_form_view">
+            <field name="name">conservatori.music</field>
+            <field name="model">conservatori.music</field>
+            <field name="arch" type="xml">
+                <form string="Music Form">
+                    <sheet>
+<field name="foto"/>
+                        <group>
+	    <field name="instrument"/> <field name="numero"/>        <field name="name"/>
+                            <field name="grup"/>
+                            <field name="reforc"/>
+			    <field name="grupantic"/>			                      
+			    <field name="phone"/> 
+   </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+	<record model="ir.ui.view" id="music_kanban_view">
+            <field name="name">conservatori.music</field>
+            <field name="model">conservatori.music</field>
+            <field name="arch" type="xml">
+            <kanban default_group_by="instrument" default_order="instrument" quick_create="true">
+                    <field name="numero" sum="numero"/>
+                    <templates>
+                    <t t-name="kanban-box">
+                            <div  t-attf-class="oe_kanban_color_{{kanban_getcolor(record.numero.raw_value)}}
+                                                  oe_kanban_global_click_edit oe_semantic_html_override
+                                                  oe_kanban_card {{record.group_fancy==1 ? 'oe_kanban_card_fancy' : ''}}">
+                                <a type="open">
+                                    <img class="oe_kanban_image"
+                                        t-att-src="kanban_image('conservatori.music', 'foto', record.id.value)" />
+                                </a>
+                                <div t-attf-class="oe_kanban_content">
+                                    <h4>
+                                        <a type="edit">
+                                            <field name="name"></field>
+                                        </a>
+                                    </h4>
+                                    <ul>
+ 
+                                       <li>Group: <field name="grup"></field></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+             </field>
+        </record>
+ 
+	<record model="ir.ui.view" id="grup_form_view">
+            <field name="name">conservatori.grup</field>
+            <field name="model">conservatori.grup</field>
+            <field name="arch" type="xml">
+                <form string="Group Form">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="director"/>
+                            <field name="titulars"/>
+			    <field name="reforcos"/> 
+			    <field name="musicantic"/>                    
+    </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+ 
+        <record model="ir.actions.act_window" id="music_list_action">
+            <field name="name">Musics</field>
+            <field name="res_model">conservatori.music</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,kanban</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Create the first music
+                </p>
+            </field>
+        </record>
+ 
+        <record model="ir.actions.act_window" id="grup_list_action">
+            <field name="name">Group</field>
+            <field name="res_model">conservatori.grup</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Create the first grup
+                </p>
+            </field>
+        </record>
+ 
+        <!-- top level menu: no parent -->
+        <menuitem id="main_cons_menu" name="Conservatory"/>
+        <!-- A first level in the left side menu is needed
+             before using action= attribute -->
+        <menuitem id="cons_menu" name="Configuration"
+                  parent="main_cons_menu"/>
+        <!-- the following menuitem should appear *after*
+             its parent openacademy_menu and *after* its
+             action course_list_action -->
+        <menuitem id="music_menu" name="Musics" parent="cons_menu"
+                  action="music_list_action"/>
+        <!-- Full id location:
+             action="openacademy.course_list_action"
+             It is not required when it is the same module -->
+         <menuitem id="grup_menu" name="Group" parent="cons_menu"
+                  action="grup_list_action"/>
+    </data>
+</openerp>

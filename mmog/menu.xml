@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+<record model="ir.ui.view" id="player_kanban_view">
+            <field name="name">player.kanban</field>
+            <field name="model">mmog.player</field>
+            <field name="arch" type="xml">
+            <kanban quick_create="true">
+                    <field name="points"/>
+                    <templates>
+                    <t t-name="kanban-box">
+                            <div  t-attf-class="oe_kanban_color_{{kanban_getcolor(record.points.raw_value)}}
+                                                  oe_kanban_global_click_edit oe_semantic_html_override
+                                                  oe_kanban_card {{record.group_fancy==1 ? 'oe_kanban_card_fancy' : ''}}">
+                                <a type="open">
+                                    <img class="oe_kanban_image"
+                                        t-att-src="kanban_image('mmog.player', 'avatar', record.id.value)" />
+                                </a>
+                                <div t-attf-class="oe_kanban_content">
+                                    <h4>
+                                        <a type="edit">
+                                            <field name="name"></field>
+                                        </a>
+                                    </h4>
+                                    <ul>
+ 
+                                       <li>Points: <field name="points"  widget="percentpie"/></li>
+                                       <li>Money: <field name="money"/></li>
+                                       <li>Gold: <field name="gold"/></li>
+                                       <li>Coal: <field name="coal"/></li>
+                                       <li>Stones: <field name="stones"/></li>
+                                       <li>Fortresses: <field name="fortress" widget="many2many"/></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+             </field>
+        </record>
+<record model="ir.ui.view" id="fortress_kanban_view">
+            <field name="name">fortress.kanban</field>
+            <field name="model">mmog.fortress</field>
+            <field name="arch" type="xml">
+            <kanban quick_create="true" default_group_by="id_player" default_order="level">
+                    <field name="id_player"/>
+                    <templates>
+                    <t t-name="kanban-box">
+                            <div  t-attf-class="oe_kanban_color_{{kanban_getcolor(record.id_player.raw_value)}}
+                                                  oe_kanban_global_click_edit oe_semantic_html_override
+                                                  oe_kanban_card {{record.group_fancy==1 ? 'oe_kanban_card_fancy' : ''}}">
+                                <a type="open">
+                                    <img class="oe_kanban_image"
+                                        t-att-src="kanban_image('mmog.fortress', 'icon', record.id.value)" />
+                                </a>
+                                <div t-attf-class="oe_kanban_content">
+                                    <h4>
+                                        <a type="edit">
+                                            <field name="name"></field>
+                                        </a>
+                                    </h4>
+                                    <ul>
+ 
+                               
+ 
+                                       <li>Integrity: 
+ <field name="integrity" widget="gauge" style="width:150px; height: 110px;" options="{'levelcolors': ['#a9d70b', '#f9c802', '#ff0000'], 'action_jump': '357'}">Integrity</field>
+</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+             </field>
+        </record>
+
+	<record model="ir.ui.view" id="player_search_view">
+            <field name="name">player.search</field>
+            <field name="model">mmog.player</field>
+            <field name="arch" type="xml">
+                <search string="Player search">
+                            <field name="name"/>
+                            <field name="points"/>
+                            <field name="fortress"/>
+                            <filter name="0_points" string="0 Points" domain="[('points','=',0)]"/>
+                           
+                </search>
+            </field>
+        </record> 
+	<record model="ir.ui.view" id="fortress_search_view">
+            <field name="name">fortress.search</field>
+            <field name="model">mmog.fortress</field>
+            <field name="arch" type="xml">
+                <search string="Fortress search">
+                        <field name="id_player"/>
+                        <field name="name"/>
+                            <field name="integrity"/>
+                            <field name="level"/>
+                        <filter name="less_50" string="less than 50% of integrity" domain="[('integrity','&lt;',50)]"/>
+<group string="Group By:">                        
+<filter name="player" string="Player" context="{'group_by':'id_player'}"/>
+<filter name="level" string="Level" context="{'group_by':'level'}"/>
+</group>
+                </search>
+            </field>
+        </record> 
+	<record model="ir.ui.view" id="attack_search_view">
+            <field name="name">attack.search</field>
+            <field name="model">mmog.attack</field>
+            <field name="arch" type="xml">
+                <search string="attack search">
+
+                          <filter name="progress" string="Not Finished" domain="[('progress','&lt;',100)]"/>
+ <group string="Group By:">
+                          <filter name="data" string="Data" context="{'group_by':'data'}"/> 
+                            <filter name="fortress_attacking" string="Attacking" context="{'group_by':'fortress_attacking'}"/>
+                            <filter name="fortress_defender" string="Defending" context="{'group_by':'fortress_defender'}"/>
+               </group> </search>
+            </field>
+        </record> 
+	
+        
+
+        <record model="ir.ui.view" id="player_tree_view">
+            <field name="name">player.tree</field>
+            <field name="model">mmog.player</field>
+            <field name="arch" type="xml">
+                <tree string="Player tree">
+                            <field name="name"/>
+                            <field name="points" widget="percentpie"/>
+                            <field name="money"/>
+                            <field name="gold"/>
+                            <field name="coal"/>
+                            <field name="stones"/>
+                            <field name="fortress"/>
+                </tree>
+            </field>
+        </record> 
+	<record model="ir.ui.view" id="fortress_tree_view">
+            <field name="name">fortress.tree</field>
+            <field name="model">mmog.fortress</field>
+            <field name="arch" type="xml">
+                <tree string="Fortress tree">
+                        <field name="id_player"/>
+                        <field name="name"/>
+                            <field name="integrity" widget="progressbar"/>
+                            <field name="x"/><field name="y"/>
+                            <field name="level"/>
+                            <field name="food"/>
+                            <field name="soldiers"/>
+                            <field name="population"/>
+                </tree>
+            </field>
+        </record> 
+	<record model="ir.ui.view" id="attack_tree_view">
+            <field name="name">attack.tree</field>
+            <field name="model">mmog.attack</field>
+            <field name="arch" type="xml">
+                <tree string="attack tree">
+                          <field name="data"/> 
+                          <field name="progress" widget="progressbar"/>
+                            <field name="fortress_attacking"/>
+                            <field name="soldiers_sent"/>
+                            <field name="attacker_soldiers_killed"/>
+                            <field name="fortress_defender"/>
+                            <field name="defender_soldiers_killed"/>
+                </tree>
+            </field>
+        </record> 
+	<record model="ir.ui.view" id="player_form_view">
+            <field name="name">player.form</field>
+            <field name="model">mmog.player</field>
+            <field name="arch" type="xml">
+                <form string="Player Form">
+                    <sheet>
+                     <notebook>
+                       <page string="Player data">
+                        <field name="avatar" widget="image" class="oe_left oe_avatar"/>
+                        <group string="Personal Data">
+                            <field name="name"/>
+                            <field name="points" widget="integer"/>
+                            <field name="active"/>
+                        </group>
+                      </page>
+                       <page string="Resources">
+                        <group string="Stock">
+                            <field name="money"/>
+                            <field name="gold"/>
+                            <field name="coal"/>
+                            <field name="stones"/>
+                        </group>
+                        <group string="Buidings">
+                            <field name="fortress" mode="kanban,tree">
+ <kanban>
+				 <!--list of field to be loaded -->
+				 <field name="name" />
+				 <field name="icon" />
+		   
+				 <templates>
+				 <t t-name="kanban-box">
+					 <div class="oe_product_vignette">
+					 <a type="open">
+					    <img class="oe_kanban_image" style="width:50px; height:auto;"
+						t-att-src="kanban_image('mmog.fortress', 'icon', record.id.value)" />
+					</a>
+					<div class="oe_product_desc">
+					    <h4>
+						<a type="edit">
+						    <field name="name"></field>
+						</a>
+					    </h4>
+					    
+					</div>
+				    </div>
+				    </t>
+                    </templates>
+                </kanban>
+</field>
+                        </group>
+                      </page>
+                     </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record> 
+	<record model="ir.ui.view" id="fortress_form_view">
+            <field name="name">fortress.form</field>
+            <field name="model">mmog.fortress</field>
+            <field name="arch" type="xml">
+                <form string="Fortress Form">
+                    <sheet>
+                     <notebook>
+                       <page string="Fortress data">
+                        <group><field name="id_player"/></group>
+                        <group string="Main Data">
+                            <field name="icon" widget="image" class="oe_left oe_avatar"/>
+                        <field name="name"/>
+                            <field name="integrity"/>
+                            <field name="x"/><field name="y"/>
+                            <field name="state"/>
+                        </group>
+                      </page>
+                       <page string="Resources">
+                        <group string="Stock">
+                            <field name="level"/>
+                            <field name="food"/>
+                        </group>
+                        <group string="People">
+                            <field name="soldiers"/>
+                            <field name="population"/>
+                        </group>
+                      </page>
+                     </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record> 
+	<record model="ir.ui.view" id="attack_form_view">
+            <field name="name">attack.form</field>
+            <field name="model">mmog.attack</field>
+            <field name="arch" type="xml">
+                <form string="attack Form">
+                    <sheet>
+                     <notebook>
+                       <page string="Attack data">
+			<group string="Status">
+                          <field name="data"/> 
+                          <field name="progress"/>
+                        </group>
+                        <group string="Attacking Fortress">
+                            <field name="fortress_attacking"/>
+                            <field name="soldiers_sent"/>
+                            <field name="attacker_soldiers_killed"/>
+                        </group>
+                        <group string="Defender Fortress">
+                            <field name="fortress_defender"/>
+                            <field name="defender_soldiers_killed"/>
+                        </group>
+                      </page>
+                     </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record> 
+
+
+        <record model="ir.actions.act_window" id="players_list_action">
+            <field name="name">Players</field>
+            <field name="res_model">mmog.player</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,kanban</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Create the first player
+                </p>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="fortresss_list_action">
+            <field name="name">Fortress</field>
+            <field name="res_model">mmog.fortress</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,kanban</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Create the first fortress
+                </p>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="attacks_list_action">
+            <field name="name">Attacks</field>
+            <field name="res_model">mmog.attack</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Create the first attack
+                </p>
+            </field>
+        </record>
+ 
+        <menuitem id="main_mmog_menu" name="Mmog"/>
+        <menuitem id="mmog_menu" name="Mmog Config"
+                  parent="main_mmog_menu"/>
+        <menuitem id="players_menu" name="Players" parent="mmog_menu"
+                  action="players_list_action"/>
+        <menuitem id="fortress_menu" name="Fortress" parent="mmog_menu"
+                  action="fortresss_list_action"/>
+        <menuitem id="attack_menu" name="Attack" parent="mmog_menu"
+                  action="attacks_list_action"/>
+    </data>
+</openerp>
+
+

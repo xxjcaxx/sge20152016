@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+ <record model="ir.ui.view" id="socio_form_view">
+            <field name="name">cooperativa.socio</field>
+            <field name="model">cooperativa.socio</field>
+            <field name="arch" type="xml">
+                <form string="Socio Form">
+                    <sheet>
+<field name ="foto" widget="image" class="oe_left oe_avatar"/> 
+                       <group>
+                            <field name="name"/>
+                            <field name="camiones"/> <field name="n_camiones"/> <field name="arrobas"/>
+                    
+    </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+ <record model="ir.ui.view" id="camion_form_view">
+            <field name="name">cooperativa.camion</field>
+            <field name="model">cooperativa.camion</field>
+            <field name="arch" type="xml">
+                <form string="Socio Form">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="id_socio"/>
+                            <field name="matricula"/>
+                            <field name="cajones"/>
+                            <field name="arrobas"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+ <record model="ir.ui.view" id="socio_kanban_view">
+            <field name="name">cooperativa.socio</field>
+            <field name="model">cooperativa.socio</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <!--list of field to be loaded -->
+
+                    <templates>
+                    <t t-name="kanban-box">
+                            <div class="oe_product_vignette">
+                                <a type="open">
+                                    <img class="oe_kanban_image"
+                                        t-att-src="kanban_image('cooperativa.socio', 'foto', record.id.value)" />
+                                </a>
+                                <div class="oe_product_desc">
+                                    <h4>
+                                        <a type="edit">
+                                            <field name="name"></field>
+                                        </a>
+                                    </h4>
+                                    <ul>
+                                       
+				       <li>Arrobas: <field name="arrobas"></field></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+ <record model="ir.ui.view" id="camion_search_view">
+            <field name="name">cooperativa.camion</field>
+            <field name="model">cooperativa.camion</field>
+            <field name="arch" type="xml">
+                <search string="Socio Form">
+                            <field name="name"/>
+                            <field name="matricula"/>
+                            <field name="cajones" string="Boxes or @" filter_domain="['|',('cajones','=',self),('arrobas','=',self)]"/> 
+                           <filter name="more_100" string="More than 100 boxes" domain="[('cajones','>',100)]"/>
+                           <group string="Group by:">
+                               <filter name="group_by_matricula" string="Matricula" context="{'group_by': 'matricula'}"/>
+                            </group> 
+                </search>
+            </field>
+        </record>
+
+
+   <record model="ir.actions.act_window" id="camion_list_action">
+            <field name="name">Camions</field>
+            <field name="res_model">cooperativa.camion</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Create the first course
+                </p>
+            </field>
+        </record>
+   <record model="ir.actions.act_window" id="socio_list_action">
+            <field name="name">Socios</field>
+            <field name="res_model">cooperativa.socio</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,kanban</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Create the first course
+                </p>
+            </field>
+        </record>
+ 
+        <menuitem id="main_cooperativa_menu" name="Cooperativa"/>
+        <menuitem id="cooperativa_menu" name="Open Academy"
+                  parent="main_cooperativa_menu"/>
+        <menuitem id="camion_menu" name="Camion" parent="cooperativa_menu"
+                  action="camion_list_action"/>
+           
+        <menuitem id="socio_menu" name="Socio" parent="cooperativa_menu"
+                  action="socio_list_action"/>
+    </data>
+</openerp>
+
+
