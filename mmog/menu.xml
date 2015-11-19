@@ -265,7 +265,8 @@
                      <notebook>
                        <page string="Attack data">
 			<group string="Status">
-                          <field name="data"/> 
+                          <field name="data"/>
+                          <field name="arrival_date"/><field name="distance"/> 
                           <field name="progress"/>
                         </group>
                         <group string="Attacking Fortress">
