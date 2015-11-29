@@ -82,17 +82,17 @@
                 <search string="Player search">
                             <field name="name"/>
                             <field name="points"/>
-                            <field name="fortress"/>
-                            <filter name="0_points" string="0 Points" domain="[('points','=',0)]"/>
-                           
-                </search>
-            </field>
-        </record> 
-	<record model="ir.ui.view" id="fortress_search_view">
-            <field name="name">fortress.search</field>
-            <field name="model">mmog.fortress</field>
-            <field name="arch" type="xml">
-                <search string="Fortress search">
+				    <field name="fortress"/>
+				    <filter name="0_points" string="0 Points" domain="[('points','=',0)]"/>
+				   
+			</search>
+		    </field>
+		</record> 
+		<record model="ir.ui.view" id="fortress_search_view">
+		    <field name="name">fortress.search</field>
+		    <field name="model">mmog.fortress</field>
+		    <field name="arch" type="xml">
+				<search string="Fortress search">
                         <field name="id_player"/>
                         <field name="name"/>
                             <field name="integrity"/>
@@ -267,7 +267,8 @@
 			<group string="Status">
                           <field name="data"/>
                           <field name="arrival_date"/><field name="distance"/> 
-                          <field name="progress"/>
+                          <field name="progress"/> <field name="last_update"/>
+                         <!-- <button name="update_progress" type="object" string="update" class="oe_highlight" /> -->
                         </group>
                         <group string="Attacking Fortress">
                             <field name="fortress_attacking"/>
@@ -277,6 +278,7 @@
                         <group string="Defender Fortress">
                             <field name="fortress_defender"/>
                             <field name="defender_soldiers_killed"/>
+                            <field name="finished"/>
                         </group>
                       </page>
                      </notebook>
@@ -326,6 +328,20 @@
                   action="fortresss_list_action"/>
         <menuitem id="attack_menu" name="Attack" parent="mmog_menu"
                   action="attacks_list_action"/>
+
+        <record forcecreate="True" id="cron_atacs" model="ir.cron">
+   		<field name="name">Cron Attack</field>
+                <field eval="True" name="active" />
+            	<field name="user_id" ref="base.user_root" />
+            	<field name="interval_number">1</field>
+           	<field name="interval_type">minutes</field>
+           	<field name="numbercall">-1</field>
+            	<field eval="False" name="doall" />
+           	<field eval="'mmog.attack'" name="model" />
+           	<field eval="'update_progress'" name="function" />
+	</record>
+
+
     </data>
 </openerp>
 

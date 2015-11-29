@@ -52,11 +52,12 @@ class attack(models.Model):
      fortress_attacking = fields.Many2one('mmog.fortress')
      fortress_defender = fields.Many2one('mmog.fortress')
      data = fields.Datetime()
-     last_update = fields.Datetime()
+     last_update = fields.Datetime(default=fields.datetime.now())
      soldiers_sent = fields.Integer()
      attacker_soldiers_killed = fields.Integer()
      defender_soldiers_killed = fields.Integer()
      progress = fields.Float()
+     finished = fields.Boolean(default=False)
      distance = fields.Integer(compute='_get_distance')
      arrival_date = fields.Datetime(compute='_get_distance')
      def _get_distance(self):
@@ -67,10 +68,58 @@ class attack(models.Model):
             DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
             data1=datetime.datetime.strptime(a.data,DATETIME_FORMAT)
             end=data1+datetime.timedelta(minutes=a.distance)
-            print end.time()
-            print end
-            print data1
+            #print end.time()
+            #print end
+            #print data1
             a.arrival_date=end
+
+     @api.model
+     def update_progress(self):
+        att = self.search([('finished','=',False)])
+        DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"                                         
+        att.write({'last_update': datetime.datetime.now()})
+        print att
+        for i in att:
+           end=datetime.datetime.strptime(i.arrival_date,DATETIME_FORMAT)                
+           if end < datetime.datetime.now():
+              diflevel = i.fortress_attacking.level/i.fortress_defender.level
+                                                           
+              i.write({'progress':10})
+              for k in range(0,i.soldiers_sent):
+                  if i.fortress_defender.soldiers > 0 and randint(0,100) < 30:
+                     i.fortress_defender.write({'soldiers': i.fortress_defender.soldiers - 1})
+                     i.write({'defender_soldiers_killed': i.defender_soldiers_killed+1})
+              for k in range(0,i.fortress_defender.soldiers):
+                  if i.soldiers_sent > 0 and randint(0,100) < 30:
+                     i.write({'soldiers_sent': i.soldiers_sent - 1})
+                     i.write({'attacker_soldiers_killed': i.attacker_soldiers_killed+1})
+              i.write({'progress':min(i.progress+1,100)})                           
+              if i.soldiers_sent == 0 or i.fortress_defender.soldiers == 0:
+                 i.write({'finished':True,'progress':100}) 
+        
+        
+         # if not a.finished:
+         #   DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
+         #   end=datetime.datetime.strptime(a.arrival_date,DATETIME_FORMAT)
+         #   if end < datetime.datetime.now():
+         #      a.progress=10
+         #   ahora = datetime.datetime.now()                        
+        #    diff = (ahora-end).seconds
+        #    print str(a.id)+' '+str(diff)+'******************'
+        #    if ahora < end:
+        #       diff = -diff         
+        #    if diff/60 >= 5: # si han pasado al menos 5 minutos desde la llegada
+        #      total_rounds = ((diff//60)//5)
+        #      a.progress=min(a.progress+total_rounds,100) 
+        #    # como llegar es un 10%, hay que limitar la batalla a 90 ataques, cada uno 1% y cada uno cada 5 minutos
+        #      # ahora hay que calcular las rondas que quedan
+        #      last = 1 #datetime.datetime.strptime(a.last_update,DATETIME_FORMAT)
+        #      quedan = (ahora-last).seconds//300
+        #      print str(quedan)+" Quedan +++++++++++++"
+        #      for i in range(0,quedan):
+        #          print "ronda: "+str(i),
+
+        #    a.write({'last_update': ahora})
 
      
 
