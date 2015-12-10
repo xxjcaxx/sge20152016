@@ -105,28 +105,5 @@ class attack(models.Model):
         return new_id
         
 
-         # if not a.finished:
-         #   DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
-         #   end=datetime.datetime.strptime(a.arrival_date,DATETIME_FORMAT)
-         #   if end < datetime.datetime.now():
-         #      a.progress=10
-         #   ahora = datetime.datetime.now()                        
-        #    diff = (ahora-end).seconds
-        #    print str(a.id)+' '+str(diff)+'******************'
-        #    if ahora < end:
-        #       diff = -diff         
-        #    if diff/60 >= 5: # si han pasado al menos 5 minutos desde la llegada
-        #      total_rounds = ((diff//60)//5)
-        #      a.progress=min(a.progress+total_rounds,100) 
-        #    # como llegar es un 10%, hay que limitar la batalla a 90 ataques, cada uno 1% y cada uno cada 5 minutos
-        #      # ahora hay que calcular las rondas que quedan
-        #      last = 1 #datetime.datetime.strptime(a.last_update,DATETIME_FORMAT)
-        #      quedan = (ahora-last).seconds//300
-        #      print str(quedan)+" Quedan +++++++++++++"
-        #      for i in range(0,quedan):
-        #          print "ronda: "+str(i),
-
-        #    a.write({'last_update': ahora})
-
      
 
