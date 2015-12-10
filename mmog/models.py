@@ -96,8 +96,15 @@ class attack(models.Model):
               i.write({'progress':min(i.progress+1,100)})                           
               if i.soldiers_sent == 0 or i.fortress_defender.soldiers == 0:
                  i.write({'finished':True,'progress':100}) 
+                 i.fortress_attacking.write({'soldiers': i.fortress_attacking.soldiers+i.soldiers_sent}) 
+     @api.model
+     def create(self, values):
+        new_id = super(attack, self).create(values)
+        print values
+        new_id.fortress_attacking.write({'soldiers': new_id.fortress_attacking.soldiers-new_id.soldiers_sent})
+        return new_id
         
-        
+
          # if not a.finished:
          #   DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
          #   end=datetime.datetime.strptime(a.arrival_date,DATETIME_FORMAT)
