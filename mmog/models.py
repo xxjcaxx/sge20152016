@@ -4,6 +4,25 @@ from openerp import models, fields, api
 from random import randint
 import datetime
 
+class wizard(models.TransientModel):
+     _name = 'mmog.wizard'
+
+     def _default_attacker(self):
+         return self.env['mmog.fortress'].browse(self._context.get('active_id'))
+
+     fortress_attacker = fields.Many2one('mmog.fortress',default=_default_attacker)
+     fortress_target = fields.Many2one('mmog.fortress') 
+     soldiers_sent = fields.Integer(default=1)
+
+
+
+     @api.multi
+     def launch(self):
+       if self.fortress_attacker.soldiers >= self.soldiers_sent:
+          self.env['mmog.attack'].create({'fortress_attacking':self.fortress_attacker.id,'fortress_defender':self.fortress_target.id,'data':fields.datetime.now(),'soldiers_sent':self.soldiers_sent})
+       return {}
+
+
 class player(models.Model):
      _name = 'mmog.player'
 #url, email, image, float_time, reference, html, progressbar, statusbar, handle, etc.
@@ -39,6 +58,12 @@ class fortress(models.Model):
      x = fields.Integer()
      y = fields.Integer()
      icon = fields.Binary()
+   #  @api.model
+   #  def name_get(self):
+   #     res=[]
+   #     for i in self:
+   #         res.append((i.id,str(i.name)+", "+str(i.id_player.name)))
+   #     return res  
 #     @api.model
 #     def create(self, values):
 #        new_id = super(fortress, self).create(values)
